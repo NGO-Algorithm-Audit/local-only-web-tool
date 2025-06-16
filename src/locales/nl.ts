@@ -261,6 +261,8 @@ Voor classificatie (doelvariabele is categorisch):
         weightedF1Score:
             'Het harmonisch gemiddelde van precisie en recall, berekend per klasse en gewogen naar het aantal echte gevallen per klasse, wat een metriek biedt voor datasets met ongelijke klassenverdeling',
         correlationDifference: 'Correlatie verschil: {{correlationDifference}}',
+        univariateTextFilterSelect:
+            'Selecteer een kolom om de univariate distributies te bekijken',
         univariateText:
             '<br>Onderstaande figuren tonen de verdeling voor iedere variabele. De synthetische data is van hoge kwaliteit wanneer de verdelingen nagenoeg gelijk zijn.',
         bivariateText:

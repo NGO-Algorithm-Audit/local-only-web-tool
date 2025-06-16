@@ -1,7 +1,5 @@
 import { t } from 'i18next';
 import { Fragment } from 'react/jsx-runtime';
-import ErrorBoundary from './ErrorBoundary';
-import DistributionBarChart from './graphs/DistributionBarChart';
 import HeatMapChart from './graphs/HeatMap';
 import { UnivariateCharts } from './UnivariateCharts';
 import { Accordion } from './ui/accordion';
@@ -10,6 +8,7 @@ import ViolinChart from './graphs/ViolinChart';
 import GroupBarChart from './graphs/GroupBarChart';
 import SimpleTable from './SimpleTable';
 import { MarkdownWithTooltips } from './MarkdownWithTooltips';
+import { UnivariateDistributionSyntheticDataAccordeonContent } from './composed-components/UnivariateDistributionSyntheticDataAccordeonContent';
 
 interface CorrelationMatrixProps {
     heatmapData: {
@@ -757,74 +756,13 @@ export const DistributionReport = (
                                                 'syntheticData.univariateDistributionSyntheticData'
                                             )}
                                             content={
-                                                <>
-                                                    <MarkdownWithTooltips className="py-4 markdown">
-                                                        {t(
-                                                            'syntheticData.univariateText',
-                                                            {
-                                                                samples:
-                                                                    syntheticData.length,
-                                                            }
-                                                        )}
-                                                    </MarkdownWithTooltips>
-                                                    {Object.keys(
-                                                        realData[0]
-                                                    ).map(
-                                                        (
-                                                            columnName: string,
-                                                            columnIndex: number
-                                                        ) => {
-                                                            const realDataColumn =
-                                                                realData.map(
-                                                                    (
-                                                                        row: Record<
-                                                                            string,
-                                                                            number
-                                                                        >
-                                                                    ) =>
-                                                                        row[
-                                                                            columnName
-                                                                        ]
-                                                                );
-                                                            const syntheticDataColumn =
-                                                                syntheticData.map(
-                                                                    (
-                                                                        row: Record<
-                                                                            string,
-                                                                            number
-                                                                        >
-                                                                    ) =>
-                                                                        row[
-                                                                            columnName
-                                                                        ]
-                                                                );
-                                                            return (
-                                                                <ErrorBoundary
-                                                                    key={
-                                                                        columnIndex
-                                                                    }
-                                                                >
-                                                                    <DistributionBarChart
-                                                                        dataType={
-                                                                            dataTypes[
-                                                                                columnName
-                                                                            ]
-                                                                        }
-                                                                        realData={
-                                                                            realDataColumn
-                                                                        }
-                                                                        syntheticData={
-                                                                            syntheticDataColumn
-                                                                        }
-                                                                        column={
-                                                                            columnName
-                                                                        }
-                                                                    />
-                                                                </ErrorBoundary>
-                                                            );
-                                                        }
-                                                    )}
-                                                </>
+                                                <UnivariateDistributionSyntheticDataAccordeonContent
+                                                    syntheticData={
+                                                        syntheticData
+                                                    }
+                                                    realData={realData}
+                                                    dataTypes={dataTypes}
+                                                />
                                             }
                                         ></Accordion>
                                     </div>

@@ -260,6 +260,8 @@ For classification (when the target is categorical):
             'Harmonic mean of precision and recall, calculated for each class and weighted by the class’s support (number of true instances), providing a balanced performance measure for imbalanced datasets',
         correlationDifference:
             'Correlation difference: {{correlationDifference}}',
+        univariateTextFilterSelect:
+            'Select a column to show univariate distribution',
         univariateText:
             '<br>The figures below display the distribution for each variable. The synthetic data are of high quality when the distributions are roughly the same.',
         bivariateText:
