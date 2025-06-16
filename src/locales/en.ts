@@ -264,6 +264,10 @@ For classification (when the target is categorical):
             'Select a column to show univariate distribution',
         univariateText:
             '<br>The figures below display the distribution for each variable. The synthetic data are of high quality when the distributions are roughly the same.',
+        bivariateTextFilterSelect1:
+            'Select a column to show bivariate distribution',
+        bivariateTextFilterSelect2:
+            'Select a second column to show bivariate distribution',
         bivariateText:
             'The figures below display the differences in distributions for a combination of two variables. For comparing two categorical variables, bar charts are plotted. For comparing a numerical and a categorical variables, a so called [violin plot](https://en.wikipedia.org/wiki/Violin_plot) is shown. For comparing two numercial variables, a [LOESS plot](https://en.wikipedia.org/wiki/Local_regression) is created. For all plots holds: the synthetic data is of high quality when the shape of the distributions are roughly the same.',
         moreInfo:

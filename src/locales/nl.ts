@@ -265,6 +265,10 @@ Voor classificatie (doelvariabele is categorisch):
             'Selecteer een kolom om de univariate distributies te bekijken',
         univariateText:
             '<br>Onderstaande figuren tonen de verdeling voor iedere variabele. De synthetische data is van hoge kwaliteit wanneer de verdelingen nagenoeg gelijk zijn.',
+        bivariateTextFilterSelect1:
+            'Selecteer een kolom om de bivariate distributies te bekijken',
+        bivariateTextFilterSelect2:
+            'Selecteer een tweede kolom om de bivariate distributies te bekijken',
         bivariateText:
             'Onderstaande figuren tonen de verschillen distributies voor een combinatie van twee variabelen. Voor de vergelijking van twee categorische variabelen worden staafdiagrammen getoond. Voor de vergelijking van een numerieke en een categorische variabele wordt een zogenaamd [violin plot](https://en.wikipedia.org/wiki/Violin_plot) gebruikt. Voor de vergelijking van twee numerieke variabelen wordt een [LOESS-plot](https://en.wikipedia.org/wiki/Local_regression) gemaakt. Voor alle plots geldt: de synthetische data zijn van hoge kwaliteit wanneer de vormen van de distributies nagenoeg overeenkomen.',
         moreInfo:
