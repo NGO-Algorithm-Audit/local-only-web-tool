@@ -52,7 +52,9 @@
         ul li {
             line-height: 1;
         }
-
+        > ul > li:nth-child(2n) {
+            @apply text-green-600;
+        }
         ul {
             line-height: 1;
             @apply mb-0;
