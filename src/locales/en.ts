@@ -289,12 +289,13 @@ missing data are imputed. For {tooltip:syntheticData.missingDataMCARTooltip}Miss
     },
 
     biasAnalysis: {
-        testingStatisticalSignificance: `**5. Testing cluster differences wrt. bias variable**
+        testingStatisticalSignificance: `**5. Cluster differences wrt. bias variable**
 
-- <i class="font-serif">H</i><sub>0</sub>: no difference in bias variable between the most deviating cluster and the rest of the dataset
-- <i class="font-serif">H</i><sub>1</sub>: difference in bias variable between the most deviating cluster and the rest of the dataset
+<i class="font-serif">H</i><sub>0</sub>: no difference in bias variable between the most deviating cluster and the rest of the dataset
+<br>
+<i class="font-serif">H</i><sub>1</sub>: difference in bias variable between the most deviating cluster and the rest of the dataset
 
-A two-sided t-test is performed to accept or reject <i class="font-serif">H</i><sub>0</sub>:
+A one-sided Z-test is performed:
 
 {tooltip:biasAnalysis.p_valueTooltip}p_value{/tooltip} : {{p_val}} 
         `,
@@ -353,7 +354,12 @@ In this example, we analyze which group is most adversely affected by the risk p
             heading: 'In the most biased cluster datapoints have:',
             accordionTitle:
                 'Statistical significant difference wrt. cluster features',
-            accordionSubTitle: `Bonferroni correction for multiple comparisons
+            accordionSubTitle: `The following statistical test is conducted for each feature: 
+            
+<i class="font-serif">H</i><sub>0</sub>: feature doesn't occur more often in most deviating cluster compared to the rest of the dataset
+<i class="font-serif">H</i><sub>1</sub>: feature does occur more often in most deviating cluster compared to the rest of the dataset
+
+For categorical data a two-sided Z-test, while for numerical data a two-sided t-test is used. To account for multiple hypothesis testing Bonferroni correction is applied.
 `,
 
             comparison: {
@@ -388,15 +394,14 @@ In this example, we analyze which group is most adversely affected by the risk p
         },
         clusterinResults: {
             heading: '4. Clustering results',
-            description: `
-- Number of clusters detected: {{clusterCount}}
+            description: `Number of clusters detected: {{clusterCount}}
             `,
             label: 'Choose cluster to show number of datapoints for',
             valueText:
                 'Number of datapoints in cluster {{index}}: {{value}} / {{totalRecords}}',
         },
-        higherAverage: `The most deviating cluster has statistically significant different bias variable than the rest of the dataset.`,
-        noSignificance: `No statistically significant difference in bias variable between the most biased cluster and the rest of the dataset.`,
+        higherAverage: `This means <i class="font-serif">H</i><sub>0</sub> is rejected and <i class="font-serif">H</i><sub>1</sub> is accepted: the most deviating cluster has statistically significant different bias variable than the rest of the dataset.`,
+        noSignificance: `This means <i class="font-serif">H</i><sub>1</sub> is rejected and <i class="font-serif">H</i><sub>0</sub> is accepted: there is no statistically significant difference in bias variable between the most deviating cluster and the rest of the dataset.`,
 
         conclusion: `7. Conclusion and bias report`,
         conclusionDescription: `From the above figures and statistical tests, it can be concluded that:`,
