@@ -100,6 +100,13 @@ def chi2_test_on_cluster(decoded_X_test, bias_score, cluster_label):
     cluster_df = decoded_X_test[decoded_X_test["cluster_label"] == cluster_label]
     rest_df = decoded_X_test[decoded_X_test["cluster_label"] != cluster_label]
 
+    # number of columns in dataset excluding bias variable and cluster_label
+    p = decoded_X_test.columns.shape[0] - 2
+
+    # Bonferroni correction for multiple comparisons
+    alpha = 0.05
+    alpha_adj = alpha/(p-2)
+
     for column in decoded_X_test.drop(columns=[bias_score, "cluster_label"]).columns:
         for value in list(decoded_X_test[column].unique()):
             
@@ -134,8 +141,10 @@ def chi2_test_on_cluster(decoded_X_test, bias_score, cluster_label):
             else:
                 print(f"Skipping Chi-squared test for {column} = {value} due to zero counts in contingency table.")
 
+    print("alpha_adj:", alpha_adj)
+
     # print if any statistically significant differences in most deviating cluster vs the rest of the dataset was found or not
-    if any(res['p_val'] < 0.05 for res in chi2_results.values()):
+    if any(res['p_val'] < alpha_adj for res in chi2_results.values()):
         print(f"Statistically significant differences in frequency found:")
     else:
         print(f"91mNo statistically significant differences in means found.")
@@ -146,7 +155,7 @@ def chi2_test_on_cluster(decoded_X_test, bias_score, cluster_label):
     for var, res in chi2_results.items():
         if (current_column != var[0]):
             current_column = var[0]
-            if res['p_val'] < 0.05:
+            if res['p_val'] < alpha_adj:
                 comparisons.append({
                         'key': 'biasAnalysis.biasedCluster.differenceCategorical.feature',
                         'params': {
@@ -154,7 +163,7 @@ def chi2_test_on_cluster(decoded_X_test, bias_score, cluster_label):
                         }
                     })
 
-        if res['p_val'] < 0.05:
+        if res['p_val'] < alpha_adj:
             direction = res['direction']
             if direction == "higher":
                 print(f"{var[0]}: '{var[1]}' in the most deviating cluster occurs more often than in the rest of the dataset.")
@@ -597,6 +606,7 @@ def run():
             setResult(json.dumps({
                 'type': 'accordion',
                 'titleKey': 'biasAnalysis.biasedCluster.accordionTitle',
+                'subtitleKey': 'biasAnalysis.biasedCluster.accordionSubTitle',
                 'comparisons': comparisons,
                 'className': 'biasAnalysis-biasedClusterAccordion'
             }))

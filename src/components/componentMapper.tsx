@@ -97,11 +97,15 @@ export default function ComponentMapper({
                     case 'accordion':
                         if (resultItem.comparisons) {
                             // Handle translation of comparisons
-                            const content = resultItem.comparisons
+                            const content = `${
+                                resultItem.subtitleKey
+                                    ? t(resultItem.subtitleKey)
+                                    : ''
+                            }${resultItem.comparisons
                                 .map((comparison: Comparison) =>
                                     t(comparison.key, comparison.params)
                                 )
-                                .join('\n');
+                                .join('\n')}`;
 
                             return (
                                 <Accordion

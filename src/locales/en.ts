@@ -351,7 +351,10 @@ In this example, we analyze which group is most adversely affected by the risk p
         },
         biasedCluster: {
             heading: 'In the most biased cluster datapoints have:',
-            accordionTitle: 'Features of most biased cluster',
+            accordionTitle:
+                'Statistical significant difference wrt. cluster features',
+            accordionSubTitle: `Bonferroni correction for multiple comparisons
+`,
 
             comparison: {
                 less: '{{value}} less {{feature}} than in the rest of the dataset.',

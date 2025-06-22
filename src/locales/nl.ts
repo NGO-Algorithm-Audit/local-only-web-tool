@@ -362,7 +362,8 @@ Er wordt een tweezijdige t-toets uitgevoerd om <i class="font-serif">H</i><sub>0
         biasedCluster: {
             heading: 'In het cluster met de meeste bias hebben datapunten:',
             accordionTitle:
-                'Eigenschappen meest afwijkende cluster ten opzichte van de rest van de dataset',
+                'Statistical significant difference wrt. cluster features',
+            accordionSubTitle: 'Bonferroni correction for multiple comparisons',
             comparison: {
                 less: '{{value}} minder {{feature}} dan in de rest van de dataset.',
                 more: '{{value}} meer {{feature}} dan in de rest van de dataset.',
