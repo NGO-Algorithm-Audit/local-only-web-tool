@@ -79,7 +79,7 @@ export default function BiasSettings({
             whichPerformanceMetricValueIsBetter: 'lower',
         },
     });
-    const [iter, setIter] = useState([10]);
+    const [iter, setIter] = useState([3]);
     const [clusters, setClusters] = useState([25]);
 
     const [performanceMetricColumnError, setPerformanceMetricColumnError] =
