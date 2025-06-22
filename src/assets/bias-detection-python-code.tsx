@@ -573,11 +573,6 @@ def run():
     setOutputData("otherClusters", df_other.to_json(orient='records'))
 
     
-    setResult(json.dumps({
-        'type': 'heading',
-        'headingKey': 'biasAnalysis.conclusion'
-    }))
-
     
         
     # Calculate the difference in percentage for each category value between cluster 0 and the entire dataset
@@ -586,12 +581,7 @@ def run():
     # Select only cluster 0
     cluster_0 = decoded_X_test[decoded_X_test["cluster_label"] == 0]
 
-    if p_val < 0.05:
-        setResult(json.dumps({
-            'type': 'text',
-            'key': 'biasAnalysis.conclusionDescription'
-        }))
-    
+    if p_val < 0.05:    
         if (localDataType == 'numeric'):
             
             comparisons = t_test_on_cluster(test_df, bias_score, cluster_label=0)
@@ -610,8 +600,18 @@ def run():
                 'comparisons': comparisons,
                 'className': 'biasAnalysis-biasedClusterAccordion'
             }))
-    
 
+    setResult(json.dumps({
+        'type': 'heading',
+        'headingKey': 'biasAnalysis.conclusion'
+    }))
+
+    if p_val < 0.05:
+        setResult(json.dumps({
+            'type': 'text',
+            'key': 'biasAnalysis.conclusionDescription'
+        }))
+    
     setResult(json.dumps({
         'type': 'export-button',
     }))
