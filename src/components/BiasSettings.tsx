@@ -210,12 +210,14 @@ export default function BiasSettings({
             return;
         }
 
-        if (formData.selectedDataType === 'categorical' && !equal) {
-            setDataTypeError(
-                t('biasSettings.form.errors.categoricalDataRequired')
-            );
-            return;
-        }
+        // for now commmented... needs more analysis
+
+        // if (formData.selectedDataType === 'categorical' && !equal) {
+        //     setDataTypeError(
+        //         t('biasSettings.form.errors.categoricalDataRequired')
+        //     );
+        //     return;
+        // }
 
         onRun({
             clusterSize: clusters[0],

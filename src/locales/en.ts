@@ -45,10 +45,10 @@ export const en = {
                     dataSetTooltip: `Preprocess your data such that: 
                     - missing values are removed or replaced;
                     - all columns (except your bias variable column) should have the same datatypes, e.g., numerical or categorical;
-                    - the bias variable column is numerical`,
+                    - the bias variable column is categorical`,
                     performanceMetric: 'Bias variable',
                     performanceMetricTooltip:
-                        'Clustering will be performed on the bias variable. The bias variable should be numerical. Examples of bias variables are "being classified as high risk" or "selected for an investigation"',
+                        'Clustering will be performed on the bias variable. The bias variable should be categorical. Examples of bias variables are "being classified as high risk" or "selected for an investigation"',
                     dataType: 'Type of data',
                     dataTypeTooltip:
                         'Specify whether the data are categorical or numerical. All columns (except your bias variable column) should have the same data type',
@@ -289,7 +289,8 @@ missing data are imputed. For {tooltip:syntheticData.missingDataMCARTooltip}Miss
     },
 
     biasAnalysis: {
-        testingStatisticalSignificance: `**5. Cluster differences wrt. bias variable**
+        // TODO 295,296 : bias variable vervangen door gekozen bias variable
+        testingStatisticalSignificance: `**5. Testing cluster differences wrt. bias variable**
 
 <i class="font-serif">H</i><sub>0</sub>: no difference in bias variable between the most deviating cluster and the rest of the dataset
 <br>
@@ -400,6 +401,7 @@ For categorical data a two-sided Z-test, while for numerical data a two-sided t-
             valueText:
                 'Number of datapoints in cluster {{index}}: {{value}} / {{totalRecords}}',
         },
+        // TODO : 400,401 : bias variable vervangen door gekozen bias variable
         higherAverage: `This means <i class="font-serif">H</i><sub>0</sub> is rejected and <i class="font-serif">H</i><sub>1</sub> is accepted: the most deviating cluster has statistically significant different bias variable than the rest of the dataset.`,
         noSignificance: `This means <i class="font-serif">H</i><sub>1</sub> is rejected and <i class="font-serif">H</i><sub>0</sub> is accepted: there is no statistically significant difference in bias variable between the most deviating cluster and the rest of the dataset.`,
 
