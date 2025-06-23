@@ -453,6 +453,8 @@ def run():
     print(f"Z-statistic: {z_stat:.4f}")
     print(f"P-value: {p_val:.4f}")
 
+    
+
     # Perform independent two-sample t-test (two-sided: average bias metric in most_biased_cluster_df ≠ average bias metric in rest_df)
     # t_stat, p_val = ttest_ind(bias_score_most_biased, bias_score_rest, alternative='two-sided')
 
@@ -466,6 +468,23 @@ def run():
             'p_val': "{:.3f}".format(p_val),
             'biasVariable': bias_score
         }
+    }))
+
+    setResult(json.dumps({
+        'type': 'accordion',
+        'titleKey': 'biasAnalysis.statisticDetailsTitle',
+        'textKey': 'biasAnalysis.statisticDetailsContent',
+        'params': {
+            'mostBiasedClusterLabel':most_biased_cluster_label,
+            'mostBiasedCount': int(most_biased_count),
+            'mostBiasedTotal': int(most_biased_total),
+            'mostBiasedFactor': "{:.4f}".format(most_biased_count / most_biased_total),
+            'restCount': int(rest_count),
+            'restTotal': int(rest_total),
+            'restFactor': "{:.4f}".format(rest_count / rest_total),
+            'z_stat': "{:.4f}".format(z_stat),
+            'p_val': "{:.4f}".format(p_val)
+        }            
     }))
 
     setResult(json.dumps({

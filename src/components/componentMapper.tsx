@@ -115,6 +115,26 @@ export default function ComponentMapper({
                                     className={resultItem?.className ?? ''}
                                 />
                             );
+                        } else if (resultItem.textKey) {
+                            // Handle translation of comparisons
+                            const content = `${
+                                resultItem.subtitleKey
+                                    ? t(resultItem.subtitleKey)
+                                    : ''
+                            }${
+                                resultItem.textKey
+                                    ? t(resultItem.textKey, resultItem.params)
+                                    : ''
+                            }`;
+
+                            return (
+                                <Accordion
+                                    key={index}
+                                    title={t(resultItem.titleKey || '')}
+                                    content={content}
+                                    className={resultItem?.className ?? ''}
+                                />
+                            );
                         }
                         return null;
 
