@@ -9,6 +9,7 @@ from scipy.stats import chi2_contingency
 import scipy.stats as stats
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.model_selection import train_test_split
+from statsmodels.stats.proportion import proportions_ztest
 
 warnings.filterwarnings('ignore')
 
@@ -431,13 +432,32 @@ def run():
     bias_score_rest = pd.to_numeric(rest_df[bias_score])
 
     
-    
+    # most disavanteagous bias variable is always minimum value of the bias variable
+    most_biased_cluster_label = most_biased_cluster_df[bias_score].min()
+
+    # Perform Z-test for proportions
+    most_biased_count = (most_biased_cluster_df[bias_score] == most_biased_cluster_label).sum()
+    most_biased_total = len(most_biased_cluster_df)
+    rest_count = (rest_df[bias_score] == most_biased_cluster_label).sum()
+    rest_total = len(rest_df)
+
+    # Perform two-proportion z-test
+    counts = np.array([most_biased_count, rest_count])
+    nobs = np.array([most_biased_total, rest_total])
+
+    z_stat, p_val = proportions_ztest(counts, nobs, alternative='larger')
+
+    print(f"The label indicating the most disavanteagous bias: {most_biased_cluster_label}")
+    print(f"Most biased cluster: {most_biased_count}/{most_biased_total} ({most_biased_count/most_biased_total:.3f})")
+    print(f"Rest of dataset: {rest_count}/{rest_total} ({rest_count/rest_total:.3f})")
+    print(f"Z-statistic: {z_stat:.4f}")
+    print(f"P-value: {p_val:.4f}")
 
     # Perform independent two-sample t-test (two-sided: average bias metric in most_biased_cluster_df ≠ average bias metric in rest_df)
-    t_stat, p_val = ttest_ind(bias_score_most_biased, bias_score_rest, alternative='two-sided')
+    # t_stat, p_val = ttest_ind(bias_score_most_biased, bias_score_rest, alternative='two-sided')
 
-    print(f"T-statistic: {t_stat}")
-    print(f"p-value: {p_val}")
+    # print(f"T-statistic: {t_stat}")
+    # print(f"p-value: {p_val}")
    
     setResult(json.dumps({
         'type': 'text',
