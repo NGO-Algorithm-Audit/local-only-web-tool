@@ -289,12 +289,11 @@ missing data are imputed. For {tooltip:syntheticData.missingDataMCARTooltip}Miss
     },
 
     biasAnalysis: {
-        // TODO 295,296 : bias variable vervangen door gekozen bias variable
         testingStatisticalSignificance: `**5. Testing cluster differences wrt. bias variable**
 
-<i class="font-serif">H</i><sub>0</sub>: no difference in bias variable between the most deviating cluster and the rest of the dataset
+<i class="font-serif">H</i><sub>0</sub>: no difference in {{biasVariable}} between the most deviating cluster and the rest of the dataset
 <br>
-<i class="font-serif">H</i><sub>1</sub>: difference in bias variable between the most deviating cluster and the rest of the dataset
+<i class="font-serif">H</i><sub>1</sub>: difference in {{biasVariable}} between the most deviating cluster and the rest of the dataset
 
 A one-sided Z-test is performed:
 
@@ -401,9 +400,8 @@ For categorical data a two-sided Z-test, while for numerical data a two-sided t-
             valueText:
                 'Number of datapoints in cluster {{index}}: {{value}} / {{totalRecords}}',
         },
-        // TODO : 400,401 : bias variable vervangen door gekozen bias variable
-        higherAverage: `This means <i class="font-serif">H</i><sub>0</sub> is rejected and <i class="font-serif">H</i><sub>1</sub> is accepted: the most deviating cluster has statistically significant different bias variable than the rest of the dataset.`,
-        noSignificance: `This means <i class="font-serif">H</i><sub>1</sub> is rejected and <i class="font-serif">H</i><sub>0</sub> is accepted: there is no statistically significant difference in bias variable between the most deviating cluster and the rest of the dataset.`,
+        higherAverage: `This means <i class="font-serif">H</i><sub>0</sub> is rejected and <i class="font-serif">H</i><sub>1</sub> is accepted: the most deviating cluster has statistically significant different {{biasVariable}} than the rest of the dataset.`,
+        noSignificance: `This means <i class="font-serif">H</i><sub>1</sub> is rejected and <i class="font-serif">H</i><sub>0</sub> is accepted: there is no statistically significant difference in {{biasVariable}} between the most deviating cluster and the rest of the dataset.`,
 
         conclusion: `7. Conclusion and bias report`,
         conclusionDescription: `From the above figures and statistical tests, it can be concluded that:`,

@@ -315,9 +315,9 @@ In dit voorbeeld analyseren welke groepen het COMPAS risicotaxatie-algoritme afw
         },
         testingStatisticalSignificance: `**5. Cluster verschillen mbt. bias variabele**
 
-<i class="font-serif">H</i><sub>0</sub>: geen verschil in bias variabele tussen het meest afwijkende cluster en de rest van de dataset
+<i class="font-serif">H</i><sub>0</sub>: geen verschil in {{biasVariable}} tussen het meest afwijkende cluster en de rest van de dataset
 <br>
-<i class="font-serif">H</i><sub>1</sub>: verschil in bias variabele tussen het meest afwijkende cluster en de rest van de dataset
+<i class="font-serif">H</i><sub>1</sub>: verschil in {{biasVariable}} tussen het meest afwijkende cluster en de rest van de dataset
 
 Een eenzijdige Z-toets wordt uitgevoerd:
 
@@ -400,8 +400,8 @@ Aantal gevonden clusters: {{clusterCount}}
             valueText:
                 'Aantal datapunten in cluster {{index}}: {{value}} / {{totalRecords}}',
         },
-        higherAverage: `Dit betekent dat <i class="font-serif">H</i><sub>0</sub> wordt verworpen en <i class="font-serif">H</i><sub>1</sub> wordt geaccepteerd: het meest afwijkende cluster heeft statistisch significant andere bias variabele dan de rest van de dataset.`,
-        noSignificance: `Dit betekent dat <i class="font-serif">H</i><sub>1</sub> wordt verworpen en <i class="font-serif">H</i><sub>0</sub> wordt geaccepteerd: het meest afwijkende cluster heeft statistisch significant geen andere bias variabele dan de rest van de dataset.`,
+        higherAverage: `Dit betekent dat <i class="font-serif">H</i><sub>0</sub> wordt verworpen en <i class="font-serif">H</i><sub>1</sub> wordt geaccepteerd: het meest afwijkende cluster heeft statistisch significant andere {{biasVariable}} dan de rest van de dataset.`,
+        noSignificance: `Dit betekent dat <i class="font-serif">H</i><sub>1</sub> wordt verworpen en <i class="font-serif">H</i><sub>0</sub> wordt geaccepteerd: het meest afwijkende cluster heeft statistisch significant geen andere {{biasVariable}} dan de rest van de dataset.`,
 
         conclusion: `7. Conclusie en bias rapport`,
         conclusionDescription: `Uit de bovenstaande figuren en statistische tests kan worden geconcludeerd dat:`,

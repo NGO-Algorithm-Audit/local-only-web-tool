@@ -443,13 +443,17 @@ def run():
         'type': 'text',
         'key': 'biasAnalysis.testingStatisticalSignificance',
         'params': {
-            'p_val': "{:.3f}".format(p_val)
+            'p_val': "{:.3f}".format(p_val),
+            'biasVariable': bias_score
         }
     }))
 
     setResult(json.dumps({
         'type': 'text',
-        'key': 'biasAnalysis.higherAverage' if p_val < 0.05 else 'biasAnalysis.noSignificance'
+        'key': 'biasAnalysis.higherAverage' if p_val < 0.05 else 'biasAnalysis.noSignificance',
+        'params': {
+            'biasVariable': bias_score
+        }
     }))
 
     if p_val < 0.05:
