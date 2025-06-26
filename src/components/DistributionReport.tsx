@@ -1,7 +1,5 @@
 import { t } from 'i18next';
 import { Fragment } from 'react/jsx-runtime';
-import ErrorBoundary from './ErrorBoundary';
-import DistributionBarChart from './graphs/DistributionBarChart';
 import HeatMapChart from './graphs/HeatMap';
 import { UnivariateCharts } from './UnivariateCharts';
 import { Accordion } from './ui/accordion';
@@ -10,6 +8,9 @@ import ViolinChart from './graphs/ViolinChart';
 import GroupBarChart from './graphs/GroupBarChart';
 import SimpleTable from './SimpleTable';
 import { MarkdownWithTooltips } from './MarkdownWithTooltips';
+import { UnivariateDistributionSyntheticDataAccordeonContent } from './composed-components/UnivariateDistributionSyntheticDataAccordeonContent';
+import { BivariateDistributionSyntheticDataAccordeonContent } from './composed-components/BivariateDistributionSyntheticDataAccordeonContent';
+import { DataRow } from '@/interfaces/datarow';
 
 interface CorrelationMatrixProps {
     heatmapData: {
@@ -32,28 +33,6 @@ function CorrelationMatrix(props: CorrelationMatrixProps) {
             showLegend={props.showLegend}
         />
     );
-}
-
-interface DataRow {
-    [key: string]: string | number | boolean;
-}
-
-function countCategory2ForCategory1(
-    data: DataRow[],
-    category1: string,
-    category2: string,
-    column1: string,
-    column2: string
-) {
-    const count = data.filter(
-        row => row[column1] === category1 && row[column2] === category2
-    ).length;
-
-    const total = data.filter(row => row[column1] === category1).length;
-    if (total === 0) {
-        return 0;
-    }
-    return (count / total) * 100;
 }
 
 type additionalContent = {
@@ -524,138 +503,7 @@ export const DistributionReport = (
                             'bivariateDistributionSyntheticData',
                             columnNames
                         );
-                        const charts = columnNames.map(
-                            (column, indexcolumn1) => {
-                                const dataType = dataTypes[column];
-                                return columnNames.map(
-                                    (column2, indexcolumn2) => {
-                                        const dataType2 = dataTypes[column2];
-                                        if (indexcolumn1 >= indexcolumn2) {
-                                            return null;
-                                        }
 
-                                        if (
-                                            dataType === 'categorical' &&
-                                            dataType2 === 'numerical'
-                                        ) {
-                                            return (
-                                                <ViolinChart
-                                                    key={column + column2}
-                                                    categoricalColumn={column}
-                                                    numericColumn={column2}
-                                                    realData={realData}
-                                                    syntheticData={
-                                                        syntheticData
-                                                    }
-                                                    comparison={true}
-                                                />
-                                            );
-                                        } else if (
-                                            dataType === 'numerical' &&
-                                            dataType2 === 'categorical'
-                                        ) {
-                                            return (
-                                                <ViolinChart
-                                                    key={column + column2}
-                                                    categoricalColumn={column2}
-                                                    numericColumn={column}
-                                                    realData={realData}
-                                                    syntheticData={
-                                                        syntheticData
-                                                    }
-                                                    comparison={true}
-                                                />
-                                            );
-                                        } else if (
-                                            dataType === 'categorical' &&
-                                            dataType2 === 'categorical'
-                                        ) {
-                                            const categories = Array.from(
-                                                new Set([
-                                                    ...realData.map(
-                                                        (d: DataRow) =>
-                                                            d[column] as string
-                                                    ),
-                                                ])
-                                            );
-                                            const categories2 = Array.from(
-                                                new Set([
-                                                    ...realData.map(
-                                                        (d: DataRow) =>
-                                                            d[column2] as string
-                                                    ),
-                                                ])
-                                            );
-
-                                            return (
-                                                <div key={column + column2}>
-                                                    <h2 className="text-center font-bold mt-2 text-[12px]">
-                                                        {column} vs {column2}
-                                                    </h2>
-                                                    <div className="flex flex-row w-full overflow-auto gap-4">
-                                                        {categories.map(
-                                                            (item, index) => (
-                                                                <div
-                                                                    key={`${item}${index}`}
-                                                                    className="flex flex-col"
-                                                                >
-                                                                    <GroupBarChart
-                                                                        showMeanLine={
-                                                                            false
-                                                                        }
-                                                                        colorRange={[
-                                                                            'steelblue',
-                                                                            'orange',
-                                                                        ]}
-                                                                        yAxisLabel={t(
-                                                                            'distribution.percentage'
-                                                                        )}
-                                                                        title={`${column} = ${item}`}
-                                                                        data={categories2.map(
-                                                                            item2 => ({
-                                                                                // count : number of times where item2 appears in the data for category2 and rows where category1 = item
-                                                                                name: `${item2}`,
-                                                                                values: [
-                                                                                    {
-                                                                                        name: t(
-                                                                                            'distribution.realData'
-                                                                                        ),
-                                                                                        value: countCategory2ForCategory1(
-                                                                                            realData,
-                                                                                            item,
-                                                                                            item2,
-                                                                                            column,
-                                                                                            column2
-                                                                                        ),
-                                                                                    },
-                                                                                    {
-                                                                                        name: t(
-                                                                                            'distribution.syntheticData'
-                                                                                        ),
-                                                                                        value: countCategory2ForCategory1(
-                                                                                            syntheticData,
-                                                                                            item,
-                                                                                            item2,
-                                                                                            column,
-                                                                                            column2
-                                                                                        ),
-                                                                                    },
-                                                                                ],
-                                                                            })
-                                                                        )}
-                                                                    />
-                                                                </div>
-                                                            )
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            );
-                                        }
-                                        return null;
-                                    }
-                                );
-                            }
-                        );
                         return (
                             <div key={indexReport} className="mb-4">
                                 <Accordion
@@ -663,18 +511,12 @@ export const DistributionReport = (
                                         'syntheticData.bivariateDistributionSyntheticData'
                                     )}
                                     content={
-                                        <div className="pt-[20px]">
-                                            <MarkdownWithTooltips className="py-4 markdown">
-                                                {t(
-                                                    'syntheticData.bivariateText',
-                                                    {
-                                                        samples:
-                                                            syntheticData.length,
-                                                    }
-                                                )}
-                                            </MarkdownWithTooltips>
-                                            {charts}
-                                        </div>
+                                        <BivariateDistributionSyntheticDataAccordeonContent
+                                            realData={realData}
+                                            syntheticData={syntheticData}
+                                            dataTypes={dataTypes}
+                                            columnNames={columnNames}
+                                        />
                                     }
                                 />
                             </div>
@@ -757,74 +599,13 @@ export const DistributionReport = (
                                                 'syntheticData.univariateDistributionSyntheticData'
                                             )}
                                             content={
-                                                <>
-                                                    <MarkdownWithTooltips className="py-4 markdown">
-                                                        {t(
-                                                            'syntheticData.univariateText',
-                                                            {
-                                                                samples:
-                                                                    syntheticData.length,
-                                                            }
-                                                        )}
-                                                    </MarkdownWithTooltips>
-                                                    {Object.keys(
-                                                        realData[0]
-                                                    ).map(
-                                                        (
-                                                            columnName: string,
-                                                            columnIndex: number
-                                                        ) => {
-                                                            const realDataColumn =
-                                                                realData.map(
-                                                                    (
-                                                                        row: Record<
-                                                                            string,
-                                                                            number
-                                                                        >
-                                                                    ) =>
-                                                                        row[
-                                                                            columnName
-                                                                        ]
-                                                                );
-                                                            const syntheticDataColumn =
-                                                                syntheticData.map(
-                                                                    (
-                                                                        row: Record<
-                                                                            string,
-                                                                            number
-                                                                        >
-                                                                    ) =>
-                                                                        row[
-                                                                            columnName
-                                                                        ]
-                                                                );
-                                                            return (
-                                                                <ErrorBoundary
-                                                                    key={
-                                                                        columnIndex
-                                                                    }
-                                                                >
-                                                                    <DistributionBarChart
-                                                                        dataType={
-                                                                            dataTypes[
-                                                                                columnName
-                                                                            ]
-                                                                        }
-                                                                        realData={
-                                                                            realDataColumn
-                                                                        }
-                                                                        syntheticData={
-                                                                            syntheticDataColumn
-                                                                        }
-                                                                        column={
-                                                                            columnName
-                                                                        }
-                                                                    />
-                                                                </ErrorBoundary>
-                                                            );
-                                                        }
-                                                    )}
-                                                </>
+                                                <UnivariateDistributionSyntheticDataAccordeonContent
+                                                    syntheticData={
+                                                        syntheticData
+                                                    }
+                                                    realData={realData}
+                                                    dataTypes={dataTypes}
+                                                />
                                             }
                                         ></Accordion>
                                     </div>

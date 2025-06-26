@@ -261,8 +261,14 @@ Voor classificatie (doelvariabele is categorisch):
         weightedF1Score:
             'Het harmonisch gemiddelde van precisie en recall, berekend per klasse en gewogen naar het aantal echte gevallen per klasse, wat een metriek biedt voor datasets met ongelijke klassenverdeling',
         correlationDifference: 'Correlatie verschil: {{correlationDifference}}',
+        univariateTextFilterSelect:
+            'Selecteer een kolom om de univariate distributies te bekijken',
         univariateText:
             '<br>Onderstaande figuren tonen de verdeling voor iedere variabele. De synthetische data is van hoge kwaliteit wanneer de verdelingen nagenoeg gelijk zijn.',
+        bivariateTextFilterSelect1:
+            'Selecteer een kolom om de bivariate distributies te bekijken',
+        bivariateTextFilterSelect2:
+            'Selecteer een tweede kolom om de bivariate distributies te bekijken',
         bivariateText:
             'Onderstaande figuren tonen de verschillen distributies voor een combinatie van twee variabelen. Voor de vergelijking van twee categorische variabelen worden staafdiagrammen getoond. Voor de vergelijking van een numerieke en een categorische variabele wordt een zogenaamd [violin plot](https://en.wikipedia.org/wiki/Violin_plot) gebruikt. Voor de vergelijking van twee numerieke variabelen wordt een [LOESS-plot](https://en.wikipedia.org/wiki/Local_regression) gemaakt. Voor alle plots geldt: de synthetische data zijn van hoge kwaliteit wanneer de vormen van de distributies nagenoeg overeenkomen.',
         moreInfo:
@@ -307,16 +313,23 @@ worden missende data vervangen voor schattingen. Voor {tooltip:syntheticData.mis
 In dit voorbeeld analyseren welke groepen het COMPAS risicotaxatie-algoritme afwijkend presteert. Dit doen we door het clusteralgoritme toe te passen op de onderstaande dataset. De kolom "is_recid" geeft aan of een verdachte daadwerkelijk opnieuw de fout in ging (1: ja, 0: nee). De kolom "score_text" geeft aan of werd voorspeld dat een verdachte opnieuw de fout in zou gaan (1: ja, 0: nee). De kolom "false_positive" (FP) vertegenwoordigt gevallen waarin het algoritme voorspelde dat een verdachte opnieuw de fout in zou gaan, maar dit niet gebeurde (1: FP, 0: geen FP). Een voorbeeld van de data wordt hieronder gegeven. De kolom "false_positive" wordt gebruikt als bias variabele.
 `,
         },
-        testingStatisticalSignificance: `**5. Toetsen verschil cluster mbt. bias variabele**
+        testingStatisticalSignificance: `**5. Cluster verschillen mbt. bias variabele**
 
-- <i class="font-serif">H</i><sub>0</sub>: er is geen verschil in bias variabele tussen het meest afwijkende cluster en de rest van de dataset
-- <i class="font-serif">H</i><sub>1</sub>: er is een verschil in bias variabele tussen het meest afwijkende cluster en de rest van de dataset
+<i class="font-serif">H</i><sub>0</sub>: geen verschil in {{biasVariable}} tussen het meest afwijkende cluster en de rest van de dataset
+<br>
+<i class="font-serif">H</i><sub>1</sub>: verschil in {{biasVariable}} tussen het meest afwijkende cluster en de rest van de dataset
 
-Er wordt een tweezijdige t-toets uitgevoerd om <i class="font-serif">H</i><sub>0</sub> te aanvaarden of te verwerpen.
+Een eenzijdige Z-toets wordt uitgevoerd:
 
 {tooltip:biasAnalysis.p_valueTooltip}p-waarde{/tooltip} : {{p_val}}
         `,
         p_valueTooltip: `De p-waarde is de kans om de nulhypothese (H<sub>0</sub>) onterecht te verwerpen wanneer deze in werkelijkheid waar is. Een veelgebruikte drempelwaarde is p≤0,05, wat wordt beschouwd als een voldoende lage kans om H<sub>0</sub> te verwerpen en de alternatieve hypothese (H<sub>1</sub>) te accepteren.`,
+        statisticDetailsTitle: 'Details statistische test',
+        statisticDetailsContent: `- The label indicating the most disavanteagous bias: {{mostBiasedClusterLabel}}
+- Most biased cluster: {{mostBiasedCount}}/{{mostBiasedTotal}} ({{mostBiasedFactor}})
+- Rest of dataset: {{restCount}}/{{restTotal}} ({{restFactor}})
+- Z-statistic: {{z_stat}}
+- P-value: {{p_val}}`,
         higherIsBetter: 'Hogere waarde van bias variabele is beter',
         lowerIsBetter: 'Lagere waarde van bias variabele is beter',
         parameters: {
@@ -335,7 +348,7 @@ Er wordt een tweezijdige t-toets uitgevoerd om <i class="font-serif">H</i><sub>0
 `,
         },
         distribution: {
-            mainHeading: '6. Verschil clusters mbt. eigenschappen',
+            mainHeading: '6. Cluster verschillen mbt. eigenschappen',
             heading: '"{{variable}}" verdeling per cluster:',
         },
         splittingDataset: {
@@ -356,7 +369,16 @@ Er wordt een tweezijdige t-toets uitgevoerd om <i class="font-serif">H</i><sub>0
         biasedCluster: {
             heading: 'In het cluster met de meeste bias hebben datapunten:',
             accordionTitle:
-                'Eigenschappen meest afwijkende cluster ten opzichte van de rest van de dataset',
+                'Statisch significant verschil mbt. clustereigenschappen',
+            accordionSubTitle: `De volgende statistische toets wordt uitgevoerd voor ieder kenmerk: 
+            
+<i class="font-serif">H</i><sub>0</sub>: kenmerk komt niet vaker voor in het meest afwijkende cluster in vergelijking met de rest van de dataset
+<i class="font-serif">H</i><sub>1</sub>: kenmerk komt vaker voor in het meest afwijkende cluster in vergelijking met de rest van de dataset
+
+Voor categroische data wordt een tweezijdige Z-toets en voor numeriek data wordt een tweezijdige t-toets toegepast. Om te compenseren voor het toetsen van meerder hypotheses wordt Bonferroni correctie toegepast.
+
+In groen wordeen de kenmerken weergegeven die statistisch significant vaker voorkomen in het meest afwijkende cluster dan in de rest van de dataset. In zwart worden de kenmerken weergegeven waarvoor geen statistisch significant verschil is gevonden.
+`,
             comparison: {
                 less: '{{value}} minder {{feature}} dan in de rest van de dataset.',
                 more: '{{value}} meer {{feature}} dan in de rest van de dataset.',
@@ -378,14 +400,14 @@ Er wordt een tweezijdige t-toets uitgevoerd om <i class="font-serif">H</i><sub>0
         clusterinResults: {
             heading: '4. Cluster resultaten',
             description: `
-- Aantal gevonden clusters: {{clusterCount}}
+Aantal gevonden clusters: {{clusterCount}}
             `,
             label: 'Kies cluster om het aantal datapunten voor weer te geven',
             valueText:
                 'Aantal datapunten in cluster {{index}}: {{value}} / {{totalRecords}}',
         },
-        higherAverage: `Het meest afwijkende cluster heeft statistisch significant andere bias variabele dan de rest van de dataset.`,
-        noSignificance: `Het meest afwijkende cluster heeft statistisch significant geen andere bias variabele dan de rest van de dataset.`,
+        higherAverage: `Dit betekent dat <i class="font-serif">H</i><sub>0</sub> wordt verworpen en <i class="font-serif">H</i><sub>1</sub> wordt geaccepteerd: het meest afwijkende cluster heeft statistisch significant andere {{biasVariable}} dan de rest van de dataset.`,
+        noSignificance: `Dit betekent dat <i class="font-serif">H</i><sub>1</sub> wordt verworpen en <i class="font-serif">H</i><sub>0</sub> wordt geaccepteerd: het meest afwijkende cluster heeft statistisch significant geen andere {{biasVariable}} dan de rest van de dataset.`,
 
         conclusion: `7. Conclusie en bias rapport`,
         conclusionDescription: `Uit de bovenstaande figuren en statistische tests kan worden geconcludeerd dat:`,

@@ -45,10 +45,10 @@ export const en = {
                     dataSetTooltip: `Preprocess your data such that: 
                     - missing values are removed or replaced;
                     - all columns (except your bias variable column) should have the same datatypes, e.g., numerical or categorical;
-                    - the bias variable column is numerical`,
+                    - the bias variable column is categorical`,
                     performanceMetric: 'Bias variable',
                     performanceMetricTooltip:
-                        'Clustering will be performed on the bias variable. The bias variable should be numerical. Examples of bias variables are "being classified as high risk" or "selected for an investigation"',
+                        'Clustering will be performed on the bias variable. The bias variable should be categorical. Examples of bias variables are "being classified as high risk" or "selected for an investigation"',
                     dataType: 'Type of data',
                     dataTypeTooltip:
                         'Specify whether the data are categorical or numerical. All columns (except your bias variable column) should have the same data type',
@@ -260,8 +260,14 @@ For classification (when the target is categorical):
             'Harmonic mean of precision and recall, calculated for each class and weighted by the class’s support (number of true instances), providing a balanced performance measure for imbalanced datasets',
         correlationDifference:
             'Correlation difference: {{correlationDifference}}',
+        univariateTextFilterSelect:
+            'Select a column to show univariate distribution',
         univariateText:
             '<br>The figures below display the distribution for each variable. The synthetic data are of high quality when the distributions are roughly the same.',
+        bivariateTextFilterSelect1:
+            'Select a column to show bivariate distribution',
+        bivariateTextFilterSelect2:
+            'Select a second column to show bivariate distribution',
         bivariateText:
             'The figures below display the differences in distributions for a combination of two variables. For comparing two categorical variables, bar charts are plotted. For comparing a numerical and a categorical variables, a so called [violin plot](https://en.wikipedia.org/wiki/Violin_plot) is shown. For comparing two numercial variables, a [LOESS plot](https://en.wikipedia.org/wiki/Local_regression) is created. For all plots holds: the synthetic data is of high quality when the shape of the distributions are roughly the same.',
         moreInfo:
@@ -285,14 +291,21 @@ missing data are imputed. For {tooltip:syntheticData.missingDataMCARTooltip}Miss
     biasAnalysis: {
         testingStatisticalSignificance: `**5. Testing cluster differences wrt. bias variable**
 
-- <i class="font-serif">H</i><sub>0</sub>: no difference in bias variable between the most deviating cluster and the rest of the dataset
-- <i class="font-serif">H</i><sub>1</sub>: difference in bias variable between the most deviating cluster and the rest of the dataset
+<i class="font-serif">H</i><sub>0</sub>: no difference in {{biasVariable}} between the most deviating cluster and the rest of the dataset
+<br>
+<i class="font-serif">H</i><sub>1</sub>: difference in {{biasVariable}} between the most deviating cluster and the rest of the dataset
 
-A two-sided t-test is performed to accept or reject <i class="font-serif">H</i><sub>0</sub>:
+A one-sided Z-test is performed:
 
 {tooltip:biasAnalysis.p_valueTooltip}p_value{/tooltip} : {{p_val}} 
         `,
         p_valueTooltip: `The p-value represents the probability of incorrectly rejecting the null hypothesis (H<sub>0</sub>) when it is actually true. A commonly used threshold is p≤0.05, which is the probability deemed sufficiently low to reject H<sub>0</sub> in favor of the alternative hypothesis (H<sub>1</sub>).`,
+        statisticDetailsTitle: 'Details statistical test',
+        statisticDetailsContent: `- The label indicating the most disavanteagous bias: {{mostBiasedClusterLabel}}
+- Most biased cluster: {{mostBiasedCount}}/{{mostBiasedTotal}} ({{mostBiasedFactor}})
+- Rest of dataset: {{restCount}}/{{restTotal}} ({{restFactor}})
+- Z-statistic: {{z_stat}}
+- P-value: {{p_val}}`,
         dataSetPreview: {
             heading: '1. Preview of data',
         },
@@ -345,7 +358,15 @@ In this example, we analyze which group is most adversely affected by the risk p
         },
         biasedCluster: {
             heading: 'In the most biased cluster datapoints have:',
-            accordionTitle: 'Features of most biased cluster',
+            accordionTitle:
+                'Statistical significant difference wrt. cluster features',
+            accordionSubTitle: `The following statistical test is conducted for each feature: 
+            
+<i class="font-serif">H</i><sub>0</sub>: feature doesn't occur more often in most deviating cluster compared to the rest of the dataset
+<i class="font-serif">H</i><sub>1</sub>: feature does occur more often in most deviating cluster compared to the rest of the dataset
+
+For categorical data a two-sided Z-test, while for numerical data a two-sided t-test is used. To account for multiple hypothesis testing Bonferroni correction is applied.
+`,
 
             comparison: {
                 less: '{{value}} less {{feature}} than in the rest of the dataset.',
@@ -379,15 +400,14 @@ In this example, we analyze which group is most adversely affected by the risk p
         },
         clusterinResults: {
             heading: '4. Clustering results',
-            description: `
-- Number of clusters detected: {{clusterCount}}
+            description: `Number of clusters detected: {{clusterCount}}
             `,
             label: 'Choose cluster to show number of datapoints for',
             valueText:
                 'Number of datapoints in cluster {{index}}: {{value}} / {{totalRecords}}',
         },
-        higherAverage: `The most deviating cluster has statistically significant different bias variable than the rest of the dataset.`,
-        noSignificance: `No statistically significant difference in bias variable between the most biased cluster and the rest of the dataset.`,
+        higherAverage: `This means <i class="font-serif">H</i><sub>0</sub> is rejected and <i class="font-serif">H</i><sub>1</sub> is accepted: the most deviating cluster has statistically significant different {{biasVariable}} than the rest of the dataset.`,
+        noSignificance: `This means <i class="font-serif">H</i><sub>1</sub> is rejected and <i class="font-serif">H</i><sub>0</sub> is accepted: there is no statistically significant difference in {{biasVariable}} between the most deviating cluster and the rest of the dataset.`,
 
         conclusion: `7. Conclusion and bias report`,
         conclusionDescription: `From the above figures and statistical tests, it can be concluded that:`,

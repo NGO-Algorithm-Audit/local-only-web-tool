@@ -46,11 +46,17 @@
 .biasAnalysis-biasedClusterAccordion {
     .content-list,
     .markdown {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
         ul li {
             line-height: 1;
         }
-
+        > ul > li:nth-child(2n) {
+            @apply text-green-600;
+        }
         ul {
+            line-height: 1;
             @apply mb-0;
         }
         span:has(> ul) {
