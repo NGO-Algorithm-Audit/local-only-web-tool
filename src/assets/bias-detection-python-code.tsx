@@ -30,7 +30,7 @@ from js import higherIsBetter
 from js import isDemo
 from js import dataTypeText
 
-def t_test_on_cluster(test_df, bias_score, cluster_label):
+def t_test_on_cluster(test_df, bias_variable, cluster_label):
 
     # Prepare results dictionary
     t_test_results = {}
@@ -40,7 +40,7 @@ def t_test_on_cluster(test_df, bias_score, cluster_label):
     cluster_df = test_df[test_df["cluster_label"] == cluster_label]
     rest_df = test_df[test_df["cluster_label"] != cluster_label]
 
-    for var in test_df.drop(columns=[bias_score, "cluster_label"]).columns:
+    for var in test_df.drop(columns=[bias_variable, "cluster_label"]).columns:
         # values in both partitions
         values_cluster = cluster_df[var]
         values_rest = rest_df[var]
@@ -92,7 +92,7 @@ def t_test_on_cluster(test_df, bias_score, cluster_label):
 
     return comparisons
 
-def chi2_test_on_cluster(decoded_X_test, bias_score, cluster_label):
+def chi2_test_on_cluster(decoded_X_test, bias_variable, cluster_label):
 
     comparisons = []
     # prepare results dictionary
@@ -108,7 +108,7 @@ def chi2_test_on_cluster(decoded_X_test, bias_score, cluster_label):
     alpha = 0.05
     alpha_adj = alpha/(p-2)
 
-    for column in decoded_X_test.drop(columns=[bias_score, "cluster_label"]).columns:
+    for column in decoded_X_test.drop(columns=[bias_variable, "cluster_label"]).columns:
         for value in list(decoded_X_test[column].unique()):
             
             # create a 2x2 contingency table for this value: rows = [cluster_label, rest], columns = [value present, value absent]
@@ -197,11 +197,11 @@ def run():
     features = [col for col in df.columns if (col not in emptycols) and (col != targetColumn) and (not col.startswith('Unnamed'))]
     
     if isDemo:
-        bias_score = "false_positive"
+        bias_variable = "false_positive"
         localDataType = "categorical"
         localIterations = iterations # 20
 
-        print (f"Using demo parameters: bias_score={bias_score}, targetColumn={targetColumn}, dataType={localDataType}, iterations={iterations}")
+        print (f"Using demo parameters: bias_variable={bias_variable}, targetColumn={targetColumn}, dataType={localDataType}, iterations={iterations}")
 
         # Select relevant columns
         columns_of_interest = ["age_cat", "sex", "race", "c_charge_degree", "is_recid", "score_text"]
@@ -215,15 +215,15 @@ def run():
         filtered_df["score_text"] = filtered_df["score_text"].map(lambda x: 1 if x == "High" else 0)
         filtered_df["is_recid"] = filtered_df["is_recid"].astype("category")
         
-        filtered_df[bias_score] = ((filtered_df["is_recid"] == 0) & (filtered_df["score_text"] == 1)).astype(int)
+        filtered_df[bias_variable] = ((filtered_df["is_recid"] == 0) & (filtered_df["score_text"] == 1))
 
         
     else:
         filtered_df = df
-        bias_score = targetColumn
+        bias_variable = targetColumn
         localDataType = dataType
         localIterations = iterations
-        print (f"Using parameters: bias_score={bias_score}, targetColumn={targetColumn}, dataType={localDataType}, iterations={localIterations}")
+        print (f"Using parameters: bias_variable={bias_variable}, targetColumn={targetColumn}, dataType={localDataType}, iterations={localIterations}")
 
         if (dataType == 'numeric'):
             # Convert all columns to numeric
@@ -235,33 +235,35 @@ def run():
 
     if localDataType == 'categorical':
         encoder = OrdinalEncoder()
-        filtered_df[filtered_df.columns] = encoder.fit_transform(filtered_df).astype("int64")
+        columns_to_encode = [col for col in filtered_df.columns if col != bias_variable]
+        filtered_df[columns_to_encode] = encoder.fit_transform(filtered_df[columns_to_encode])
+        # filtered_df[filtered_df.columns] = encoder.fit_transform(filtered_df).astype("int64")
     
     print("filtered_df.dtypes:")
     print(filtered_df.dtypes)
 
-    df_no_bias_score = filtered_df.drop(columns=[bias_score])
-    if df_no_bias_score.dtypes.nunique() == 1:
+    df_no_bias_variable = filtered_df.drop(columns=[bias_variable])
+    if df_no_bias_variable.dtypes.nunique() == 1:
         print('consistent data')
     else:
         print('not all columns in the provided dataset have the same data type')    
     
-        
+     # Multiply bias variable with -1 if "Lower value of bias score is better", multiply by 1 if "Higher value of bias score is better"
+    interpretationScalar = 1  
+    if higherIsBetter == 0:
+        interpretationScalar = -1;
+    
+    filtered_df[bias_variable] = filtered_df[bias_variable] * interpretationScalar
+
     # split the data into training and testing sets
     train_df, test_df = train_test_split(filtered_df, test_size=0.2, random_state=42)
-    X_train = train_df.drop(columns=[bias_score])
-
-    scaleY = 1
-    if higherIsBetter == 0:
-        scaleY = -1;
-
-    
-
-    # bias metric is negated because HBAC implementation in the package assumes that higher bias metric is better
-    y_train = train_df[bias_score] * scaleY
+    X_train = train_df.drop(columns=[bias_variable])
+    y_train = train_df[bias_variable]
 
     # remove the bias metric from the test set to prevent issues with decoding later
-    X_test = test_df.drop(columns=[bias_score])
+    X_test = test_df.drop(columns=[bias_variable])
+    y_test = test_df[bias_variable]
+
 
     # display the shapes of the resulting datasets
     print(f"Training set shape: {train_df.shape}")
@@ -277,7 +279,7 @@ def run():
 
     print(f"Using local iterations: {localIterations}")
     print(f"Using cluster size: {localClusterSize}")
-    print(f"Using bias metric: {bias_score}")
+    print(f"Using bias metric: {bias_variable}")
     
     
     if localDataType == 'numeric':
@@ -341,7 +343,7 @@ def run():
         'params': {
             'iterations': localIterations,
             'minClusterSize': localClusterSize,
-            'performanceMetric': bias_score,
+            'performanceMetric': bias_variable,
             'dataType': dataTypeText,
             'higherIsBetter': 'biasAnalysis.higherIsBetter' if higherIsBetter else 'biasAnalysis.lowerIsBetter'
         }
@@ -398,27 +400,31 @@ def run():
         'data': ''
     }))
 
-    y_test = hbac.predict(X_test.to_numpy())
+    cluster_label_X_test = hbac.predict(X_test.to_numpy())
 
     decoded_X_test = test_df.copy()
 
-    print("y_test:")
-    print(y_test)
+    print("cluster_label_X_test:")
+    print(cluster_label_X_test)
     print("test_df:")
     print(test_df)
 
     if localDataType == 'categorical':
         # decode X_test using the encoder
-        decoded_X_test = encoder.inverse_transform(test_df)
+        test_df_pred = test_df[columns_to_encode]
+        decoded_X_test = encoder.inverse_transform(test_df_pred)
     
 
     # display the decoded DataFrame
-    decoded_X_test = pd.DataFrame(decoded_X_test, columns=test_df.columns)
+    decoded_X_test = pd.DataFrame(decoded_X_test, columns=test_df_pred.columns)
     print(decoded_X_test)
     
     
-    decoded_X_test["cluster_label"] = y_test
-    
+    # decoded_X_test["cluster_label"] = cluster_label_X_test
+    decoded_X_test[bias_variable] = y_test.values
+    decoded_X_test["cluster_label"] = cluster_label_X_test
+   
+
     if localDataType == 'numeric':
         test_df["cluster_label"] = y_test
         most_biased_cluster_df = test_df[test_df["cluster_label"] == 0]
@@ -427,19 +433,19 @@ def run():
         most_biased_cluster_df = decoded_X_test[decoded_X_test["cluster_label"] == 0]
         rest_df = decoded_X_test[decoded_X_test["cluster_label"] != 0]
 
-    # Convert score_text to numeric
-    bias_score_most_biased = pd.to_numeric(most_biased_cluster_df[bias_score])
-    bias_score_rest = pd.to_numeric(rest_df[bias_score])
+
+
+    # most disavanteagous bias variable is always minimum value of the bias variable
+    most_biased_cluster_label = most_biased_cluster_df[bias_variable].min()
+    
+    
+    # Perform Z-test for proportions
+    most_biased_count = (most_biased_cluster_df[bias_variable] == most_biased_cluster_label).sum()
+    most_biased_total = len(most_biased_cluster_df)
+    rest_count = (rest_df[bias_variable] == most_biased_cluster_label).sum()
+    rest_total = len(rest_df)
 
     
-    # most disavanteagous bias variable is always minimum value of the bias variable
-    most_biased_cluster_label = most_biased_cluster_df[bias_score].min()
-
-    # Perform Z-test for proportions
-    most_biased_count = (most_biased_cluster_df[bias_score] == most_biased_cluster_label).sum()
-    most_biased_total = len(most_biased_cluster_df)
-    rest_count = (rest_df[bias_score] == most_biased_cluster_label).sum()
-    rest_total = len(rest_df)
 
     # Perform two-proportion z-test
     counts = np.array([most_biased_count, rest_count])
@@ -453,20 +459,13 @@ def run():
     print(f"Z-statistic: {z_stat:.4f}")
     print(f"P-value: {p_val:.4f}")
 
-    
-
-    # Perform independent two-sample t-test (two-sided: average bias metric in most_biased_cluster_df ≠ average bias metric in rest_df)
-    # t_stat, p_val = ttest_ind(bias_score_most_biased, bias_score_rest, alternative='two-sided')
-
-    # print(f"T-statistic: {t_stat}")
-    # print(f"p-value: {p_val}")
-   
+       
     setResult(json.dumps({
         'type': 'text',
         'key': 'biasAnalysis.testingStatisticalSignificance',
         'params': {
             'p_val': "{:.3f}".format(p_val),
-            'biasVariable': bias_score
+            'biasVariable': bias_variable
         }
     }))
 
@@ -475,7 +474,7 @@ def run():
         'titleKey': 'biasAnalysis.statisticDetailsTitle',
         'textKey': 'biasAnalysis.statisticDetailsContent',
         'params': {
-            'mostBiasedClusterLabel':most_biased_cluster_label,
+            'mostBiasedClusterLabel': int(most_biased_cluster_label),
             'mostBiasedCount': int(most_biased_count),
             'mostBiasedTotal': int(most_biased_total),
             'mostBiasedFactor': "{:.4f}".format(most_biased_count / most_biased_total),
@@ -491,7 +490,7 @@ def run():
         'type': 'text',
         'key': 'biasAnalysis.higherAverage' if p_val < 0.05 else 'biasAnalysis.noSignificance',
         'params': {
-            'biasVariable': bias_score
+            'biasVariable': bias_variable
         }
     }))
 
@@ -506,13 +505,13 @@ def run():
     cluster_counts = decoded_X_test["cluster_label"].value_counts()
     print(f"cluster_counts: {cluster_counts}")
 
-    if p_val < 0.05:
-
-        setResult(json.dumps({
+    setResult(json.dumps({
             'type': 'heading',
             'headingKey': 'biasAnalysis.distribution.mainHeading'
         }))
-        
+
+    if p_val < 0.05:
+    
         if localDataType == 'numeric':
             # Calculate mean per cluster for each variable
             means = test_df.groupby("cluster_label").mean()
@@ -523,7 +522,7 @@ def run():
 
             dropdownCategories = []
             for i, column in enumerate(X_test.columns):
-                if column != bias_score:
+                if column != bias_variable:
                     dropdownCategories.append(column)
 
             # Plot bar charts for each variable, showing means for each cluster and overall mean as red line
@@ -564,8 +563,8 @@ def run():
         
         else:
             # Create subplots for each column
-            columns_to_analyze = [col for col in decoded_X_test.columns if col not in [bias_score, "cluster_label"]]
-
+            # columns_to_analyze = [col for col in decoded_X_test.columns if col not in [bias_variable, "cluster_label"]]
+            columns_to_analyze = decoded_X_test.columns.drop(['cluster_label', bias_variable])
 
             rows = (len(columns_to_analyze) + 2) // 3  # Calculate the number of rows needed
             print(f"rows: {rows}")
@@ -636,7 +635,7 @@ def run():
     if p_val < 0.05:    
         if (localDataType == 'numeric'):
             
-            comparisons = t_test_on_cluster(test_df, bias_score, cluster_label=0)
+            comparisons = t_test_on_cluster(test_df, bias_variable, cluster_label=0)
 
             setResult(json.dumps({
                 'type': 'accordion',
@@ -644,7 +643,7 @@ def run():
                 'comparisons': comparisons
             }))
         else:
-            comparisons = chi2_test_on_cluster(decoded_X_test, bias_score, cluster_label=0)
+            comparisons = chi2_test_on_cluster(decoded_X_test, bias_variable, cluster_label=0)
         
             setResult(json.dumps({
                 'type': 'accordion',
