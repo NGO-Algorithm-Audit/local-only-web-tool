@@ -614,7 +614,15 @@ def run():
                 'titleKey': "biasAnalysis.distributionOfFeaturesAcrossClustersAccordeonTitle",
                 'defaultValue': columns_to_analyze[0]                
             }))
-
+    else:
+        setResult(json.dumps({
+            'type': 'text',
+            'key': 'biasAnalysis.distribution.noResultsClusterDifferences',
+            'params': {
+                'biasVariable': bias_variable
+            }
+        }))
+            
     df_most_biased_cluster = most_biased_cluster_df
     df_other = rest_df
     

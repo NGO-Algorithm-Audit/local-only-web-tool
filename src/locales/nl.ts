@@ -350,6 +350,7 @@ Een eenzijdige Z-toets wordt uitgevoerd:
         distribution: {
             mainHeading: '6. Cluster verschillen mbt. eigenschappen',
             heading: '"{{variable}}" verdeling per cluster:',
+            noResultsClusterDifferences: `Er worden geen resultaten getoond voor clusterverschillen met betrekking tot kenmerken, omdat er geen statistisch significant verschil is in {{biasVariable}} tussen het meest afwijkende cluster en de rest van de dataset.`,
         },
         splittingDataset: {
             heading: '3. Splitsen dataset',
