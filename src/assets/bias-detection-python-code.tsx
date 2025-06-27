@@ -233,11 +233,10 @@ def run():
 
     print(f"localDataType: {localDataType}")
 
+    columns_to_encode = [col for col in filtered_df.columns if col != bias_variable]
     if localDataType == 'categorical':
         encoder = OrdinalEncoder()
-        columns_to_encode = [col for col in filtered_df.columns if col != bias_variable]
         filtered_df[columns_to_encode] = encoder.fit_transform(filtered_df[columns_to_encode])
-        # filtered_df[filtered_df.columns] = encoder.fit_transform(filtered_df).astype("int64")
     
     print("filtered_df.dtypes:")
     print(filtered_df.dtypes)
@@ -409,11 +408,10 @@ def run():
     print("test_df:")
     print(test_df)
 
+    test_df_pred = test_df[columns_to_encode]
     if localDataType == 'categorical':
-        # decode X_test using the encoder
-        test_df_pred = test_df[columns_to_encode]
+        # decode X_test using the encoder        
         decoded_X_test = encoder.inverse_transform(test_df_pred)
-    
 
     # display the decoded DataFrame
     decoded_X_test = pd.DataFrame(decoded_X_test, columns=test_df_pred.columns)
