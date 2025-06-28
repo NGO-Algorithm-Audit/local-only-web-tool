@@ -326,8 +326,8 @@ Een eenzijdige Z-toets wordt uitgevoerd:
         p_valueTooltip: `De p-waarde is de kans om de nulhypothese (H<sub>0</sub>) onterecht te verwerpen wanneer deze in werkelijkheid waar is. Een veelgebruikte drempelwaarde is p≤0,05, wat wordt beschouwd als een voldoende lage kans om H<sub>0</sub> te verwerpen en de alternatieve hypothese (H<sub>1</sub>) te accepteren.`,
         statisticDetailsTitle: 'Details statistische test',
         statisticDetailsContent: `- The label indicating the most disavanteagous bias: {{mostBiasedClusterLabel}}
-- Most biased cluster: {{mostBiasedCount}}/{{mostBiasedTotal}} ({{mostBiasedFactor}})
-- Rest of dataset: {{restCount}}/{{restTotal}} ({{restFactor}})
+- Most biased cluster in test set: {{mostBiasedCount}}/{{mostBiasedTotal}} ({{mostBiasedFactor}})
+- Rest of test set: {{restCount}}/{{restTotal}} ({{restFactor}})
 - Z-statistic: {{z_stat}}
 - P-value: {{p_val}}`,
         higherIsBetter: 'Hogere waarde van bias variabele is beter',

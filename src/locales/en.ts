@@ -302,8 +302,8 @@ A one-sided Z-test is performed:
         p_valueTooltip: `The p-value represents the probability of incorrectly rejecting the null hypothesis (H<sub>0</sub>) when it is actually true. A commonly used threshold is p≤0.05, which is the probability deemed sufficiently low to reject H<sub>0</sub> in favor of the alternative hypothesis (H<sub>1</sub>).`,
         statisticDetailsTitle: 'Details statistical test',
         statisticDetailsContent: `- The label indicating the most disavanteagous bias: {{mostBiasedClusterLabel}}
-- Most biased cluster: {{mostBiasedCount}}/{{mostBiasedTotal}} ({{mostBiasedFactor}})
-- Rest of dataset: {{restCount}}/{{restTotal}} ({{restFactor}})
+- Most biased cluster in test set: {{mostBiasedCount}}/{{mostBiasedTotal}} ({{mostBiasedFactor}})
+- Rest of test set: {{restCount}}/{{restTotal}} ({{restFactor}})
 - Z-statistic: {{z_stat}}
 - P-value: {{p_val}}`,
         dataSetPreview: {

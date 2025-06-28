@@ -562,7 +562,6 @@ def run():
         
         else:
             # Create subplots for each column
-            # columns_to_analyze = [col for col in decoded_X_test.columns if col not in [bias_variable, "cluster_label"]]
             columns_to_analyze = decoded_X_test.columns.drop(['cluster_label', bias_variable])
 
             rows = (len(columns_to_analyze) + 2) // 3  # Calculate the number of rows needed
