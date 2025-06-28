@@ -393,6 +393,7 @@ For categorical data a two-sided Z-test, while for numerical data a two-sided t-
         distribution: {
             mainHeading: '6. Cluster differences wrt. features',
             heading: '"{{variable}}" distribution per cluster:',
+            headingAverage: '"Average {{variable}}" per cluster:',
             noResultsClusterDifferences: `No results for cluster differences with respect to features are shown, because there is no statistically significant difference in {{biasVariable}} between the most deviating cluster and the rest of the dataset.`,
         },
         splittingDataset: {

@@ -542,7 +542,7 @@ def run():
                 charts.append({
                         'yAxisLabel': 'distribution.frequency',
                         'type': 'clusterNumericalVariableDistribution',
-                        'headingKey': 'biasAnalysis.distribution.heading',  
+                        'headingKey': 'biasAnalysis.distribution.headingAverage',  
                         'title': var,
                         'meanValue': overall_means[var],
                         'data': means[var].to_json(orient='records'),
