@@ -315,9 +315,9 @@ In dit voorbeeld analyseren welke groepen het COMPAS risicotaxatie-algoritme afw
         },
         testingStatisticalSignificance: `**5. Cluster verschillen mbt. bias variabele**
 
-<i class="font-serif">H</i><sub>0</sub>: geen verschil in {{biasVariable}} tussen het meest afwijkende cluster en de rest van de dataset
+<i class="font-serif">H</i><sub>0</sub>: geen verschil in <span class="border-b-2 border-dashed border-gray-600 cursor-help" title="Je hebt deze kolom geselecteerd als bias variable">{{biasVariable}}</span> tussen het meest afwijkende cluster en de rest van de dataset
 <br>
-<i class="font-serif">H</i><sub>1</sub>: verschil in {{biasVariable}} tussen het meest afwijkende cluster en de rest van de dataset
+<i class="font-serif">H</i><sub>1</sub>: verschil in <span class="border-b-2 border-dashed border-gray-600 cursor-help" title="Je hebt deze kolom geselecteerd als bias variable">{{biasVariable}}</span> tussen het meest afwijkende cluster en de rest van de dataset
 
 Een eenzijdige Z-toets wordt uitgevoerd:
 

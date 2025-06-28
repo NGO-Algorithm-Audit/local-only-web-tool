@@ -291,9 +291,9 @@ missing data are imputed. For {tooltip:syntheticData.missingDataMCARTooltip}Miss
     biasAnalysis: {
         testingStatisticalSignificance: `**5. Testing cluster differences wrt. bias variable**
 
-<i class="font-serif">H</i><sub>0</sub>: no difference in {{biasVariable}} between the most deviating cluster and the rest of the dataset
+<i class="font-serif">H</i><sub>0</sub>: no difference in <span class="border-b-2 border-dashed border-gray-600 cursor-help" title="You selected this column as a bias variable">{{biasVariable}}</span> between the most deviating cluster and the rest of the dataset
 <br>
-<i class="font-serif">H</i><sub>1</sub>: difference in {{biasVariable}} between the most deviating cluster and the rest of the dataset
+<i class="font-serif">H</i><sub>1</sub>: difference in <span class="border-b-2 border-dashed border-gray-600 cursor-help" title="You selected this column as a bias variable">{{biasVariable}}</span> between the most deviating cluster and the rest of the dataset
 
 A one-sided Z-test is performed:
 
