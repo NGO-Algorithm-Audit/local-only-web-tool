@@ -418,13 +418,14 @@ def run():
     print(decoded_X_test)
     
     
-    # decoded_X_test["cluster_label"] = cluster_label_X_test
-    decoded_X_test[bias_variable] = y_test.values
+    if localDataType == 'categorical':
+        decoded_X_test[bias_variable] = y_test.values
+    
     decoded_X_test["cluster_label"] = cluster_label_X_test
    
 
     if localDataType == 'numeric':
-        test_df["cluster_label"] = y_test
+        test_df["cluster_label"] = cluster_label_X_test
         most_biased_cluster_df = test_df[test_df["cluster_label"] == 0]
         rest_df = test_df[test_df["cluster_label"] != 0]
     else:
@@ -622,7 +623,7 @@ def run():
                 'biasVariable': bias_variable
             }
         }))
-            
+
     df_most_biased_cluster = most_biased_cluster_df
     df_other = rest_df
     
