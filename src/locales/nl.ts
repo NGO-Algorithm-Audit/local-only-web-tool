@@ -78,7 +78,8 @@ export const nl = {
                 dataTypeRequired: 'Selecteer een gegevenstype.',
                 noNumericColumns:
                     'Geen numerieke kolommen gevonden. Upload een geldige dataset.',
-                analysisError: 'Fout tijdens analyse',
+                analysisError:
+                    'Fout tijdens analyse. Controleer of je het juiste gegevenstype hebt opgegeven. Als de fout aanhoudt, stuur dan een e-mail naar info@algorithmaudit.eu',
                 noData: 'Geen gegevens geladen',
                 numericDataRequired:
                     'Niet alle data hebben hetzelfde formaat, pas dit lokaal aan voordat je de data toevoegt.',
