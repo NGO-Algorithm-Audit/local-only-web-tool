@@ -315,9 +315,9 @@ In dit voorbeeld analyseren welke groepen het COMPAS risicotaxatie-algoritme afw
         },
         testingStatisticalSignificance: `**5. Cluster verschillen mbt. bias variabele**
 
-<i class="font-serif">H</i><sub>0</sub>: geen verschil in {{biasVariable}} tussen het meest afwijkende cluster en de rest van de dataset
+<i class="font-serif">H</i><sub>0</sub>: geen verschil in <span class="border-b-2 border-dashed border-gray-600 cursor-help" title="Je hebt deze kolom geselecteerd als bias variable">{{biasVariable}}</span> tussen het meest afwijkende cluster en de rest van de dataset
 <br>
-<i class="font-serif">H</i><sub>1</sub>: verschil in {{biasVariable}} tussen het meest afwijkende cluster en de rest van de dataset
+<i class="font-serif">H</i><sub>1</sub>: verschil in <span class="border-b-2 border-dashed border-gray-600 cursor-help" title="Je hebt deze kolom geselecteerd als bias variable">{{biasVariable}}</span> tussen het meest afwijkende cluster en de rest van de dataset
 
 Een eenzijdige Z-toets wordt uitgevoerd:
 
@@ -326,8 +326,8 @@ Een eenzijdige Z-toets wordt uitgevoerd:
         p_valueTooltip: `De p-waarde is de kans om de nulhypothese (H<sub>0</sub>) onterecht te verwerpen wanneer deze in werkelijkheid waar is. Een veelgebruikte drempelwaarde is p≤0,05, wat wordt beschouwd als een voldoende lage kans om H<sub>0</sub> te verwerpen en de alternatieve hypothese (H<sub>1</sub>) te accepteren.`,
         statisticDetailsTitle: 'Details statistische test',
         statisticDetailsContent: `- The label indicating the most disavanteagous bias: {{mostBiasedClusterLabel}}
-- Most biased cluster: {{mostBiasedCount}}/{{mostBiasedTotal}} ({{mostBiasedFactor}})
-- Rest of dataset: {{restCount}}/{{restTotal}} ({{restFactor}})
+- Most biased cluster in test set: {{mostBiasedCount}}/{{mostBiasedTotal}} ({{mostBiasedFactor}})
+- Rest of test set: {{restCount}}/{{restTotal}} ({{restFactor}})
 - Z-statistic: {{z_stat}}
 - P-value: {{p_val}}`,
         higherIsBetter: 'Hogere waarde van bias variabele is beter',
@@ -350,6 +350,8 @@ Een eenzijdige Z-toets wordt uitgevoerd:
         distribution: {
             mainHeading: '6. Cluster verschillen mbt. eigenschappen',
             heading: '"{{variable}}" verdeling per cluster:',
+            headingAverage: '"Gemiddelde {{variable}}" per cluster:',
+            noResultsClusterDifferences: `Er worden geen resultaten getoond voor clusterverschillen met betrekking tot kenmerken, omdat er geen statistisch significant verschil is in {{biasVariable}} tussen het meest afwijkende cluster en de rest van de dataset.`,
         },
         splittingDataset: {
             heading: '3. Splitsen dataset',

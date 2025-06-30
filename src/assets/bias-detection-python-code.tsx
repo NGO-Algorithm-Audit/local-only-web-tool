@@ -233,11 +233,10 @@ def run():
 
     print(f"localDataType: {localDataType}")
 
+    columns_to_encode = [col for col in filtered_df.columns if col != bias_variable]
     if localDataType == 'categorical':
         encoder = OrdinalEncoder()
-        columns_to_encode = [col for col in filtered_df.columns if col != bias_variable]
         filtered_df[columns_to_encode] = encoder.fit_transform(filtered_df[columns_to_encode])
-        # filtered_df[filtered_df.columns] = encoder.fit_transform(filtered_df).astype("int64")
     
     print("filtered_df.dtypes:")
     print(filtered_df.dtypes)
@@ -409,24 +408,24 @@ def run():
     print("test_df:")
     print(test_df)
 
+    test_df_pred = test_df[columns_to_encode]
     if localDataType == 'categorical':
-        # decode X_test using the encoder
-        test_df_pred = test_df[columns_to_encode]
+        # decode X_test using the encoder        
         decoded_X_test = encoder.inverse_transform(test_df_pred)
-    
 
     # display the decoded DataFrame
     decoded_X_test = pd.DataFrame(decoded_X_test, columns=test_df_pred.columns)
     print(decoded_X_test)
     
     
-    # decoded_X_test["cluster_label"] = cluster_label_X_test
-    decoded_X_test[bias_variable] = y_test.values
+    if localDataType == 'categorical':
+        decoded_X_test[bias_variable] = y_test.values
+    
     decoded_X_test["cluster_label"] = cluster_label_X_test
    
 
     if localDataType == 'numeric':
-        test_df["cluster_label"] = y_test
+        test_df["cluster_label"] = cluster_label_X_test
         most_biased_cluster_df = test_df[test_df["cluster_label"] == 0]
         rest_df = test_df[test_df["cluster_label"] != 0]
     else:
@@ -543,7 +542,7 @@ def run():
                 charts.append({
                         'yAxisLabel': 'distribution.frequency',
                         'type': 'clusterNumericalVariableDistribution',
-                        'headingKey': 'biasAnalysis.distribution.heading',  
+                        'headingKey': 'biasAnalysis.distribution.headingAverage',  
                         'title': var,
                         'meanValue': overall_means[var],
                         'data': means[var].to_json(orient='records'),
@@ -563,7 +562,6 @@ def run():
         
         else:
             # Create subplots for each column
-            # columns_to_analyze = [col for col in decoded_X_test.columns if col not in [bias_variable, "cluster_label"]]
             columns_to_analyze = decoded_X_test.columns.drop(['cluster_label', bias_variable])
 
             rows = (len(columns_to_analyze) + 2) // 3  # Calculate the number of rows needed
@@ -616,6 +614,14 @@ def run():
                 'titleKey': "biasAnalysis.distributionOfFeaturesAcrossClustersAccordeonTitle",
                 'defaultValue': columns_to_analyze[0]                
             }))
+    else:
+        setResult(json.dumps({
+            'type': 'text',
+            'key': 'biasAnalysis.distribution.noResultsClusterDifferences',
+            'params': {
+                'biasVariable': bias_variable
+            }
+        }))
 
     df_most_biased_cluster = most_biased_cluster_df
     df_other = rest_df

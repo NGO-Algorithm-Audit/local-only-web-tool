@@ -291,9 +291,9 @@ missing data are imputed. For {tooltip:syntheticData.missingDataMCARTooltip}Miss
     biasAnalysis: {
         testingStatisticalSignificance: `**5. Testing cluster differences wrt. bias variable**
 
-<i class="font-serif">H</i><sub>0</sub>: no difference in {{biasVariable}} between the most deviating cluster and the rest of the dataset
+<i class="font-serif">H</i><sub>0</sub>: no difference in <span class="border-b-2 border-dashed border-gray-600 cursor-help" title="You selected this column as a bias variable">{{biasVariable}}</span> between the most deviating cluster and the rest of the dataset
 <br>
-<i class="font-serif">H</i><sub>1</sub>: difference in {{biasVariable}} between the most deviating cluster and the rest of the dataset
+<i class="font-serif">H</i><sub>1</sub>: difference in <span class="border-b-2 border-dashed border-gray-600 cursor-help" title="You selected this column as a bias variable">{{biasVariable}}</span> between the most deviating cluster and the rest of the dataset
 
 A one-sided Z-test is performed:
 
@@ -302,8 +302,8 @@ A one-sided Z-test is performed:
         p_valueTooltip: `The p-value represents the probability of incorrectly rejecting the null hypothesis (H<sub>0</sub>) when it is actually true. A commonly used threshold is p≤0.05, which is the probability deemed sufficiently low to reject H<sub>0</sub> in favor of the alternative hypothesis (H<sub>1</sub>).`,
         statisticDetailsTitle: 'Details statistical test',
         statisticDetailsContent: `- The label indicating the most disavanteagous bias: {{mostBiasedClusterLabel}}
-- Most biased cluster: {{mostBiasedCount}}/{{mostBiasedTotal}} ({{mostBiasedFactor}})
-- Rest of dataset: {{restCount}}/{{restTotal}} ({{restFactor}})
+- Most biased cluster in test set: {{mostBiasedCount}}/{{mostBiasedTotal}} ({{mostBiasedFactor}})
+- Rest of test set: {{restCount}}/{{restTotal}} ({{restFactor}})
 - Z-statistic: {{z_stat}}
 - P-value: {{p_val}}`,
         dataSetPreview: {
@@ -375,9 +375,9 @@ For categorical data a two-sided Z-test, while for numerical data a two-sided t-
             },
             difference: {
                 appearance: '{{feature}} : {{value}}',
-                deviatingMoreOften: `**{{value}}**: occur in the most deviating cluster **more** often than in the rest of the dataset.
+                deviatingMoreOften: `**{{value}}**: occurs in the most deviating cluster **more** often than in the rest of the dataset.
 `,
-                deviatingLessOften: `**{{value}}**: occur in the most deviating cluster **less** often than in the rest of the dataset.
+                deviatingLessOften: `**{{value}}**: occurs in the most deviating cluster **less** often than in the rest of the dataset.
 `,
             },
             differenceCategorical: {
@@ -393,6 +393,8 @@ For categorical data a two-sided Z-test, while for numerical data a two-sided t-
         distribution: {
             mainHeading: '6. Cluster differences wrt. features',
             heading: '"{{variable}}" distribution per cluster:',
+            headingAverage: '"Average {{variable}}" per cluster:',
+            noResultsClusterDifferences: `No results for cluster differences with respect to features are shown, because there is no statistically significant difference in {{biasVariable}} between the most deviating cluster and the rest of the dataset.`,
         },
         splittingDataset: {
             heading: '3. Splitting dataset',
