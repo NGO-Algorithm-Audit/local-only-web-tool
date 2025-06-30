@@ -375,9 +375,9 @@ For categorical data a two-sided Z-test, while for numerical data a two-sided t-
             },
             difference: {
                 appearance: '{{feature}} : {{value}}',
-                deviatingMoreOften: `**{{value}}**: occur in the most deviating cluster **more** often than in the rest of the dataset.
+                deviatingMoreOften: `**{{value}}**: occurs in the most deviating cluster **more** often than in the rest of the dataset.
 `,
-                deviatingLessOften: `**{{value}}**: occur in the most deviating cluster **less** often than in the rest of the dataset.
+                deviatingLessOften: `**{{value}}**: occurs in the most deviating cluster **less** often than in the rest of the dataset.
 `,
             },
             differenceCategorical: {
