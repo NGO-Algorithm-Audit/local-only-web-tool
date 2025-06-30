@@ -80,7 +80,8 @@ export const en = {
                 dataTypeRequired: 'Please select a data type.',
                 noNumericColumns:
                     'No numeric columns found. Please upload a valid dataset.',
-                analysisError: 'Error while analysing',
+                analysisError:
+                    'Error while analysing. Please check if you specified the correct data type. If the error keeps occurring please send an e-mail to info@algorithmaudit.eu',
                 noData: 'No data loaded',
                 numericDataRequired:
                     'Not all data have same format, please change locally before attaching the data',
