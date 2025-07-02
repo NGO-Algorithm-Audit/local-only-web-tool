@@ -56,7 +56,7 @@ export default function SimpleTable({
                                 <TableCell key={i}>
                                     {translate && typeof value !== 'number'
                                         ? t(value)
-                                        : value}
+                                        : (value?.toString?.() ?? value)}
                                 </TableCell>
                             ))}
                         </TableRow>
