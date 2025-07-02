@@ -230,6 +230,8 @@ def run():
             filtered_df = filtered_df.astype('float64')
 
     preview_data = filtered_df.head(5)
+    print(preview_data)
+    
 
     print(f"localDataType: {localDataType}")
 
