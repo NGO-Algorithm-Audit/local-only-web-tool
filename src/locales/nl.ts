@@ -11,7 +11,7 @@ export const nl = {
     datasetPreview: 'Voorbeeld van dataset met de eerste 5 rijen.',
     error: 'Sorry, er is iets misgegaan.',
     loadingMessage: 'Omgeving instellen...',
-    mostBiasedCluster: 'Meest bevooroordeelde\n cluster',
+    mostBiasedCluster: 'Meest afwijkende\n cluster',
     cluster: 'Cluster {{value}}',
     downloadButton: 'Download',
     loadingPyodide: 'Python omgeving laden...',
@@ -363,7 +363,7 @@ Een eenzijdige Z-toets wordt uitgevoerd:
         numericalVariableDistributionAcrossClustersAccordeonTitle:
             'Verdeling van numerieke variabelen over clusters',
         clusters: {
-            legendMostBiasedCluster: 'Meest bevooroordeelde cluster',
+            legendMostBiasedCluster: 'Meest afwijkende cluster',
             summary:
                 'We hebben {{clusterCount}} clusters gevonden. Cluster met de meeste bias bestaat uit {{biasedCount}} datapunten. De geüploade dataset bestaat uit {{totalCount}} datapunten.',
             sizeHint:
